@@ -7,6 +7,7 @@
     <script src="js/mui.min.js"></script>
     <link href="css/mui.min.css" rel="stylesheet"/>
 	<link href="css/header.css" rel="stylesheet"/>
+	<link rel="stylesheet" type="text/css" href="fonticon/iconfont.css"/>
     <script type="text/javascript" charset="utf-8">
       	mui.init();
 		
@@ -23,22 +24,88 @@
 	</header>
 	
 	<nav class="mui-bar mui-bar-tab">
-		<a class="mui-tab-item mui-active">
-			<span class="mui-icon mui-icon-chatbubble"></span>
+		<a class="mui-tab-item mui-active" tabindex="0">
+			<span class="mui-icon iconfont icon-liaotian"></span>
 			<span class="mui-tab-label">消息</span>
 		</a>
-		<a class="mui-tab-item">
-			<span class="mui-icon mui-icon-phone"></span>
+		<a class="mui-tab-item" tabindex="1">
+			<span class="mui-icon iconfont icon-tongxunlu"></span>
 			<span class="mui-tab-label">通讯录</span>
 		</a>
-		<a class="mui-tab-item">
-			<span class="mui-icon mui-icon-navigate"></span>
+		<a class="mui-tab-item" tabindex="2">
+			<span class="mui-icon iconfont icon-zhinanzhen"></span>
 			<span class="mui-tab-label">发现</span>
 		</a>
-		<a class="mui-tab-item">
-			<span class="mui-icon mui-icon-person"></span>
+		<a class="mui-tab-item" tabindex="3">
+			<span class="mui-icon iconfont icon-htmal5icon02"></span>
 			<span class="mui-tab-label">我</span>
 		</a>
 	</nav>
+	
+	<script type="text/javascript">
+		
+		var mChatArray=[
+			{
+				pageId:"chatList.html",
+				pageUrl:"chatList.html",
+			},
+			{
+				pageId:"contact.html",
+				pageUrl:"contact.html",
+			},
+			{
+				pageId:"discover.html",
+				pageUrl:"discover.html",
+			},
+			{
+				pageId:"me.html",
+				pageUrl:"me.html",
+			},
+		];
+		
+		var mChatStyle = {
+			top:"50px",
+			bottom:"50px"
+		}
+		
+		mui.plusReady(function () {
+			
+			//禁止返回登录页
+			mui.back = function(){
+				return false;
+			}
+			
+			//获取当前的webview对象
+		    var indexWebview= plus.webview.currentWebview();
+			
+			//向当前的主页webview追加子页的4张webview对象
+			for(var i =0;i<mChatArray.length;i++){
+				var mchatPage = plus.webview.create(mChatArray[i].pageUrl,
+				mChatArray[i].pageId,mChatStyle);
+				//隐藏webview窗口
+				mchatPage.hide();
+				
+				//追加每一个子页面到当前主页面
+				indexWebview.append(mchatPage);
+			}
+			plus.webview.show(mChatArray[0].pageId);
+			
+			
+			//批量绑定tab事件,展示不同的页面
+			mui(".mui-bar-tab").on("tap","a",function(){
+				var tabindex = this.getAttribute("tabindex");
+				
+				plus.webview.show(mChatArray[tabindex].pageId,"fade-in",100);
+				
+				//隐藏其他不需要的页面
+				for(var i =0;i<mChatArray.length;i++){
+					if(i !=tabindex){
+						plus.webview.hide(mChatArray[i].pageId,"fade-out",100);
+					}
+				}
+			});
+		})
+		
+	</script>
 </body>
 </html>
