@@ -24,7 +24,7 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell mui-media">
-					<a href="javascript:;">
+					<a id="link_nickname" href="javascript:;">
 						<span class="mui-pull-right mui-icon mui-icon-arrowright" style="color: lightgray;margin-left: 3px;"></span>
 
 						<span id="span_nickname" class="mui-pull-right" style="color: gray; font-size: 14px;"></span>
@@ -43,7 +43,7 @@
 				</li>
 
 				<li class="mui-table-view-cell mui-media">
-					<a href="javascript:;">
+					<a id="link_my_qrcode" href="javascript:;">
 						<span class="mui-pull-right mui-icon mui-icon-arrowright" style="color: lightgray;margin-left: 3px;"></span>
 						<img class="mui-media-object mui-pull-right" src="image/qrcode.png" style="max-width: 20px; height: 20px;">
 
@@ -58,7 +58,7 @@
 
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell mui-media" style="text-align: center;">
-					<a href="javascript:;">
+					<a id="link_logout" href="javascript:;">
 						<div class="mui-media-body">
 							退出登录
 						</div>
@@ -80,20 +80,50 @@
 				meWebview.addEventListener("show", function() {
 					refreshUserInfo();
 				});
-				
+
 				//页面跳转我的头像
 				var link_myface = document.getElementById("link_myface");
-				link_myface.addEventListener("tap",function(){
-					mui.openWindow("myface.html","myface.html");
+				link_myface.addEventListener("tap", function() {
+					mui.openWindow("myface.html", "myface.html");
+				});
+
+				//页面跳转,修改昵称
+				var link_nickname = document.getElementById("link_nickname");
+				link_nickname.addEventListener("tap", function() {
+					mui.openWindow("mynickname.html", "mynickname.html");
+				});
+
+				//页面跳转,查看我的二维码
+				var link_my_qrcode = document.getElementById("link_my_qrcode");
+				link_my_qrcode.addEventListener("tap", function() {
+					mui.openWindow({
+						url: "myQRCode.html",
+						id: "myQRCode.html",
+						styles: {}
+					});
+				});
+				
+				//退出登录
+				var link_logout = document.getElementById("link_logout");
+				link_logout.addEventListener("tap", function() {
+					app.userLogout();
+					mui.openWindow("login.html","login.html");
+				});
+
+				//添加自定义事件,刷新头像
+				window.addEventListener("refresh", function() {
+					refreshUserInfo();
 				});
 			});
 
 			function refreshUserInfo() {
+				console.log("shuaxin");
 				var user = app.getUserGlobalInfo();
 				if (user != null) {
 					var faceImage = user.faceImage;
 					var nickname = user.nickname;
 					var username = user.username;
+					console.log(JSON.stringify(user));
 
 					var span_nickname = document.getElementById("span_nickname");
 					var span_username = document.getElementById("span_username");
@@ -102,6 +132,7 @@
 					span_username.innerHTML = username;
 
 					if (app.isNotNull(faceImage)) {
+						console.log(faceImage);
 						var img_my_face = document.getElementById("img_my_face");
 						img_my_face.src = app.imgServerUrl + faceImage;
 					}
