@@ -207,7 +207,7 @@
 							nicknameStarter + '</li>';
 						for (var j = 0; j < friendArray.length; j++) {
 							contactHtml += '' +
-								'<li friendUserId="' + friendArray[j].friendUserId + '" friendNickname="' +
+								'<li friendUserId="' + friendArray[j].friendId + '" friendNickname="' +
 								friendArray[j].friendNickname + '" friendFaceImage="' + friendArray[j].friendFaceImage +
 								'" class="chat-with-friend mui-media mui-table-view-cell mui-indexed-list-item" style="padding: 8px 10px;">' +
 								'<img class="mui-media-object mui-pull-left" style="max-width: 35px;height: 35px;" src="' + app.imgServerUrl +
@@ -222,6 +222,27 @@
 				
 				//清空数组
 				clearContactArray();
+				
+				
+				mui('#contactList').on("tap",".chat-with-friend",function(e){
+					
+					//为好友通讯录批量绑定事件
+					var friendUserId= this.getAttribute("friendUserId");
+					var friendNickname=this.getAttribute("friendNickname");
+					var friendFaceImage=this.getAttribute("friendFaceImage");
+					console.log("好友通讯录绑定事件");
+					console.log(friendUserId);
+					//打开聊天子页面
+					mui.openWindow({
+						url:"chatting.html",
+						id:"chatting-"+friendUserId,//每个朋友的聊天的页面都是唯一对应
+						extras:{
+							friendUserId:friendUserId,
+							friendNickname:friendNickname,
+							friendFaceImage:friendFaceImage
+						}
+					});
+				});
 			}
 
 
